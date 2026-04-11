@@ -15,10 +15,17 @@ export function useSSEChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+  const streamingRef = useRef(false);
 
   const sendMessage = useCallback(
     async (content: string, sessionId: string | null, fileIds?: string[]) => {
-      if (isStreaming) return;
+      if (streamingRef.current) return;
+
+      // Cancel any lingering previous stream
+      abortRef.current?.abort();
+
+      const controller = new AbortController();
+      abortRef.current = controller;
 
       const userMessage: Message = {
         id: generateId(),
@@ -38,22 +45,27 @@ export function useSSEChat() {
       };
 
       setMessages((prev) => [...prev, userMessage, assistantMessage]);
+      streamingRef.current = true;
       setIsStreaming(true);
+
+      let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
 
       try {
         const body: Record<string, unknown> = { message: content };
         if (sessionId) body.session_id = sessionId;
         if (fileIds?.length) body.file_ids = fileIds;
 
-        const response = await apiStream('/chat', body);
+        const response = await apiStream('/chat', body, controller.signal);
 
         if (!response.body) {
           throw new Error('No response body');
         }
 
-        const reader = response.body.getReader();
+        reader = response.body.getReader();
 
         for await (const event of parseSSEStream(reader)) {
+          if (controller.signal.aborted) break;
+
           const parsed = JSON.parse(event.data);
 
           switch (event.event) {
@@ -71,7 +83,7 @@ export function useSSEChat() {
             case 'tool_start': {
               const toolCall: ToolCall = {
                 id: parsed.tool_call_id || generateId(),
-                name: parsed.name || 'unknown',
+                name: parsed.tool || parsed.name || 'unknown',
                 args: parsed.args,
                 status: 'running',
               };
@@ -92,7 +104,8 @@ export function useSSEChat() {
                     ? {
                         ...m,
                         tool_calls: (m.tool_calls || []).map((tc) =>
-                          tc.id === parsed.tool_call_id
+                          tc.name === (parsed.tool || parsed.name)
+                            && tc.status === 'running'
                             ? { ...tc, result: parsed.result, status: 'complete' as const }
                             : tc
                         ),
@@ -111,11 +124,17 @@ export function useSSEChat() {
                         ...m,
                         isStreaming: false,
                         model: parsed.model,
-                        cost: parsed.cost,
+                        cost: parsed.cost_usd,
                       }
                     : m
                 )
               );
+              // Capture session_id from the done event
+              if (parsed.session_id) {
+                window.dispatchEvent(
+                  new CustomEvent('koovis:session', { detail: parsed.session_id })
+                );
+              }
               break;
             }
 
@@ -136,9 +155,7 @@ export function useSSEChat() {
             }
 
             case 'session': {
-              // Backend may send session_id for new sessions
               if (parsed.session_id) {
-                // Let the parent component handle session_id updates
                 window.dispatchEvent(
                   new CustomEvent('koovis:session', { detail: parsed.session_id })
                 );
@@ -149,7 +166,7 @@ export function useSSEChat() {
         }
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') {
-          // User cancelled
+          // User cancelled — no toast
         } else {
           const message = error instanceof Error ? error.message : 'Stream failed';
           toast.error(message);
@@ -160,11 +177,14 @@ export function useSSEChat() {
           )
         );
       } finally {
+        streamingRef.current = false;
         setIsStreaming(false);
         abortRef.current = null;
+        // Release the reader so the browser can close the connection
+        try { await reader?.cancel(); } catch { /* ignore */ }
       }
     },
-    [isStreaming]
+    [] // No dependencies — uses refs for mutable state
   );
 
   const stopStreaming = useCallback(() => {

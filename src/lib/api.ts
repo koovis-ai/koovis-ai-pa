@@ -54,7 +54,8 @@ export async function apiFetch<T>(
 
 export async function apiStream(
   path: string,
-  body: Record<string, unknown>
+  body: Record<string, unknown>,
+  signal?: AbortSignal
 ): Promise<Response> {
   const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
   const headers: Record<string, string> = {
@@ -68,6 +69,7 @@ export async function apiStream(
     method: "POST",
     headers,
     body: JSON.stringify(body),
+    signal,
   });
 
   if (response.status === 401) {

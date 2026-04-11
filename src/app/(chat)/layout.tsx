@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/lib/constants';
@@ -18,20 +18,26 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sessionsHook = useSessions();
 
+  // Stable refs for event handlers — avoids re-registering listeners on every render
+  const refreshRef = useRef(sessionsHook.refreshSessions);
+  refreshRef.current = sessionsHook.refreshSessions;
+  const createSessionRef = useRef(sessionsHook.createSession);
+  createSessionRef.current = sessionsHook.createSession;
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.replace(ROUTES.LOGIN);
     }
   }, [isAuthenticated, isLoading, router]);
 
-  // Listen for session events to refresh sidebar
+  // Listen for session events to refresh sidebar — registered once
   useEffect(() => {
     function handleSession() {
-      sessionsHook.refreshSessions();
+      refreshRef.current();
     }
     window.addEventListener('koovis:session', handleSession);
     return () => window.removeEventListener('koovis:session', handleSession);
-  }, [sessionsHook]);
+  }, []);
 
   const handleLoadMessages = useCallback((messages: Message[]) => {
     window.dispatchEvent(
@@ -40,10 +46,17 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   const handleNewChat = useCallback(() => {
-    sessionsHook.createSession();
+    createSessionRef.current();
     window.dispatchEvent(new CustomEvent('koovis:new-chat'));
     setSidebarOpen(false);
-  }, [sessionsHook]);
+  }, []);
+
+  // Memoize context value to prevent unnecessary re-renders of consumers
+  const contextValue = useMemo(() => sessionsHook, [
+    sessionsHook.sessions,
+    sessionsHook.isLoading,
+    sessionsHook.activeSessionId,
+  ]);
 
   if (isLoading) {
     return (
@@ -58,7 +71,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <SessionsContext.Provider value={sessionsHook}>
+    <SessionsContext.Provider value={contextValue}>
       <div className="flex h-full overflow-hidden">
         <SessionSidebar
           sessions={sessionsHook.sessions}

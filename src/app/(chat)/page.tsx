@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { ChatMessages } from '@/components/chat/ChatMessages';
 import { ChatInput } from '@/components/chat/ChatInput';
 import { useSSEChat } from '@/hooks/useSSEChat';
@@ -14,17 +14,25 @@ export default function ChatPage() {
   const { activeSessionId, setActiveSessionId, refreshSessions } =
     useSessionsContext();
 
+  // Stable refs for event handlers
+  const activeSessionRef = useRef(activeSessionId);
+  activeSessionRef.current = activeSessionId;
+  const setActiveSessionRef = useRef(setActiveSessionId);
+  setActiveSessionRef.current = setActiveSessionId;
+  const refreshSessionsRef = useRef(refreshSessions);
+  refreshSessionsRef.current = refreshSessions;
+
   // Listen for session events from SSE (new session created)
   useEffect(() => {
     function handleSession(e: Event) {
       const id = (e as CustomEvent<string>).detail;
-      setActiveSessionId(id);
+      setActiveSessionRef.current(id);
       localStorage.setItem(STORAGE_KEYS.SESSION_ID, id);
-      refreshSessions();
+      refreshSessionsRef.current();
     }
     window.addEventListener('koovis:session', handleSession);
     return () => window.removeEventListener('koovis:session', handleSession);
-  }, [setActiveSessionId, refreshSessions]);
+  }, []);
 
   // Listen for sidebar loading messages (session selection)
   useEffect(() => {
@@ -45,9 +53,9 @@ export default function ChatPage() {
 
   const handleSend = useCallback(
     (content: string, fileIds?: string[]) => {
-      sendMessage(content, activeSessionId, fileIds);
+      sendMessage(content, activeSessionRef.current, fileIds);
     },
-    [activeSessionId, sendMessage]
+    [sendMessage]
   );
 
   return (
