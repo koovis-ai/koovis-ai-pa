@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({ passphrase }),
       skipAuth: true,
     });
-    localStorage.setItem(STORAGE_KEYS.TOKEN, data.access_token);
+    localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
     setState({ isAuthenticated: true, isLoading: false });
   }, []);
 
