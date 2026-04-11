@@ -1,20 +1,20 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Next.js
+.next/
+out/
+
+# Build
 build/
-.venv/
-venv/
+dist/
 
 # Environment
 .env
 .env.local
-
-# Database
-*.db
-*.db-wal
-*.db-shm
+.env*.local
 
 # OS
 .DS_Store
@@ -25,6 +25,18 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Debug
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# PWA
+public/sw.js
+public/workbox-*.js
+public/swe-worker-*.js
 
 # Logs
 logs/
