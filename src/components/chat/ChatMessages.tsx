@@ -11,7 +11,6 @@ interface ChatMessagesProps {
 }
 
 export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const stickToBottomRef = useRef(true);
   const prevMessageCountRef = useRef(0);
@@ -24,11 +23,22 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
     stickToBottomRef.current = distanceFromBottom < 100;
   }, []);
 
+  // Scroll the container to the bottom (without affecting ancestors)
+  const scrollToBottom = useCallback((instant?: boolean) => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (instant) {
+      el.scrollTop = el.scrollHeight;
+    } else {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    }
+  }, []);
+
   // Auto-scroll only when stuck to bottom
   useEffect(() => {
     if (!stickToBottomRef.current) return;
-    bottomRef.current?.scrollIntoView({ behavior: isStreaming ? 'auto' : 'smooth' });
-  }, [messages, isStreaming]);
+    scrollToBottom(isStreaming);
+  }, [messages, isStreaming, scrollToBottom]);
 
   // Always scroll to bottom when a new message is added (user sent a message)
   useEffect(() => {
@@ -37,11 +47,11 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
       // New user message or new assistant placeholder — snap to bottom
       if (lastMsg.role === 'user' || (lastMsg.role === 'assistant' && lastMsg.isStreaming)) {
         stickToBottomRef.current = true;
-        bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+        scrollToBottom(true);
       }
     }
     prevMessageCountRef.current = messages.length;
-  }, [messages.length]);
+  }, [messages.length, scrollToBottom]);
 
   if (messages.length === 0) {
     return (
@@ -65,7 +75,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
-        <div ref={bottomRef} />
+        <div aria-hidden />
       </div>
     </div>
   );
