@@ -1,4 +1,4 @@
-# PA Koovis
+# Koovis
 
 Personal AI assistant by Koovis AI LLC. The intelligence layer that sits above all Koovis AI systems — managing tasks, documents, finances, learning, and security through specialized modules with multi-model orchestration.
 
@@ -13,7 +13,7 @@ This repo currently contains:
 
 ## Relationship to koovis-hq
 
-PA Koovis is a separate system with its own release cycle. It integrates WITH koovis-hq services but is not part of koovis-hq. Strategy docs, architecture blueprints, and project tracking live in koovis-hq.
+Koovis is a separate system with its own release cycle. It integrates WITH koovis-hq services but is not part of koovis-hq. Strategy docs, architecture blueprints, and project tracking live in koovis-hq.
 
 See `CLAUDE.md` for pointers to canonical documents.
 
@@ -23,4 +23,4 @@ Multi-model orchestration: route to best model per task. Claude Max for complex 
 
 ---
 
-*Koovis AI LLC — PA Koovis*
+*Koovis AI LLC — Koovis*

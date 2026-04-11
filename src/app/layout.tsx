@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Koovis PA",
-  description: "Personal AI Assistant by Koovis AI",
+  title: "Koovis",
+  description: "Your personal AI by Koovis AI",
   manifest: "/manifest.json",
 };
 

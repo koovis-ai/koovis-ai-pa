@@ -43,7 +43,7 @@ export default function LoginPage() {
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Lock className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-xl">Koovis PA</CardTitle>
+          <CardTitle className="text-xl">Koovis</CardTitle>
           <p className="text-sm text-muted-foreground">
             Enter your passphrase to continue
           </p>

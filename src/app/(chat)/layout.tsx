@@ -94,7 +94,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <span className="text-sm font-semibold">Koovis PA</span>
+            <span className="text-sm font-semibold">Koovis</span>
             <div className="ml-auto">
               <ThemeToggle />
             </div>

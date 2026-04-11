@@ -58,7 +58,7 @@ export function ChatMessages({ messages, isStreaming }: ChatMessagesProps) {
       <div className="flex flex-1 flex-col items-center justify-center gap-3 text-muted-foreground">
         <MessageSquare className="h-12 w-12 opacity-30" />
         <div className="text-center">
-          <p className="text-lg font-medium">Koovis PA</p>
+          <p className="text-lg font-medium">Koovis</p>
           <p className="text-sm">Ask me anything to get started</p>
         </div>
       </div>

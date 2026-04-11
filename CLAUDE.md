@@ -1,8 +1,8 @@
-# Koovis PA — Web Frontend
+# Koovis — Web Frontend
 
 ## What This Repo Is
 
-Koovis PA (Personal Assistant by Koovis AI) web frontend. Next.js 15 app connecting to the backend API at `api.koovis.ai`. Deployed to `pa.koovis.ai` via Vercel.
+Koovis (Personal AI by Koovis AI) web frontend. Next.js 15 app connecting to the backend API at `api.koovis.ai`. Deployed to `pa.koovis.ai` via Vercel.
 
 ## Tech Stack
 
@@ -89,4 +89,4 @@ npm run lint    # ESLint
 
 ## Historical
 
-Renamed from "Jarvis" to "PA Koovis" on 2026-02-22. Archive contains original blueprints.
+Renamed from "Jarvis" to "PA Koovis" on 2026-02-22, then to "Koovis" on 2026-04-11. Archive contains original blueprints.

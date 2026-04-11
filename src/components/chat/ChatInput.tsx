@@ -97,7 +97,7 @@ export function ChatInput({ onSend, isStreaming }: ChatInputProps) {
               handleInput();
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Message Koovis PA..."
+            placeholder="Message Koovis..."
             rows={1}
             className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground"
             disabled={isStreaming}
@@ -120,7 +120,7 @@ export function ChatInput({ onSend, isStreaming }: ChatInputProps) {
           </Button>
         </div>
         <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
-          Koovis PA can make mistakes. Verify important information.
+          Koovis can make mistakes. Verify important information.
         </p>
       </div>
     </div>

@@ -1,7 +1,7 @@
 {
-  "name": "Koovis PA",
-  "short_name": "Koovis PA",
-  "description": "Personal AI Assistant by Koovis AI",
+  "name": "Koovis",
+  "short_name": "Koovis",
+  "description": "Your personal AI by Koovis AI",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#171717",
