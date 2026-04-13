@@ -23,8 +23,9 @@ src/
 ├── app/
 │   ├── globals.css           # Tailwind + shadcn theme vars (dark/light)
 │   ├── layout.tsx            # Root layout (Providers wrapper)
+│   ├── page.tsx              # Public landing page (no auth)
 │   ├── login/page.tsx        # Passphrase login
-│   └── (chat)/
+│   └── chat/
 │       ├── layout.tsx        # Auth guard + sidebar + header
 │       └── page.tsx          # Main chat page
 ├── components/
@@ -56,7 +57,7 @@ src/
 - **Auth:** JWT stored in `localStorage` under `koovis_pa_token`. Passphrase login via `POST /api/auth/login`. 401 auto-redirects to `/login`.
 - **SSE Streaming:** `POST /api/chat` returns SSE with events: `token`, `tool_start`, `tool_result`, `done`, `error`, `session`. Custom parser in `sse-parser.ts`.
 - **Cross-component communication:** Custom DOM events (`koovis:session`, `koovis:load-messages`, `koovis:new-chat`) for sidebar ↔ chat page.
-- **Route group `(chat)`:** Main chat lives at `/`. Login at `/login`. The parenthesized directory is a layout group that doesn't affect URL.
+- **Routes:** Public landing at `/`. Chat at `/chat` (auth-guarded). Login at `/login`.
 
 ## Backend API
 
