@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const ROUTES = {
+  HOME: "/",
   LOGIN: "/login",
-  CHAT: "/",
+  CHAT: "/chat",
 } as const;
