@@ -16,14 +16,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Koovis — Personal AI Assistant",
   description:
-    "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover across Bedrock, Vertex AI, and Anthropic.",
+    "Koovis is a personal AI assistant by Koovis AI. Multi-provider LLM routing with automatic failover across Bedrock, Vertex AI, and Anthropic — one interface, always on.",
   manifest: "/manifest.json",
   metadataBase: new URL("https://pa.koovis.ai"),
+  authors: [{ name: "Rajesh Kolachana", url: "https://www.koovis.ai" }],
+  creator: "Rajesh Kolachana",
   openGraph: {
     type: "website",
     title: "Koovis — Personal AI Assistant",
     description:
-      "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover.",
+      "Koovis is a personal AI assistant by Koovis AI. Multi-provider LLM routing with automatic failover across Bedrock, Vertex AI, and Anthropic — one interface, always on.",
     url: "https://pa.koovis.ai",
     siteName: "Koovis",
     images: [
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Koovis — Personal AI Assistant",
     description:
-      "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover.",
+      "Koovis is a personal AI assistant by Koovis AI. Multi-provider LLM routing with automatic failover across Bedrock, Vertex AI, and Anthropic — one interface, always on.",
     images: ["/og-image.png"],
   },
 };
