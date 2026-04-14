@@ -14,9 +14,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Koovis",
-  description: "Your personal AI by Koovis AI",
+  title: "Koovis — Personal AI Assistant",
+  description:
+    "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover across Bedrock, Vertex AI, and Anthropic.",
   manifest: "/manifest.json",
+  metadataBase: new URL("https://pa.koovis.ai"),
+  openGraph: {
+    type: "website",
+    title: "Koovis — Personal AI Assistant",
+    description:
+      "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover.",
+    url: "https://pa.koovis.ai",
+    siteName: "Koovis",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Koovis — Personal AI Assistant",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Koovis — Personal AI Assistant",
+    description:
+      "Your personal AI by Koovis AI. Multi-provider LLM routing with automatic failover.",
+    images: ["/og-image.png"],
+  },
 };
 
 export const viewport: Viewport = {
